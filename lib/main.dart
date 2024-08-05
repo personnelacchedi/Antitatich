@@ -24,7 +24,7 @@ class FoodWasteApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: SettingsScreen(),
+      home: WelcomeScreen(),
       routes: {
         '/welcome': (context) => WelcomeScreen(),
         '/settings': (context) => SettingsScreen(),  // Add route for settings screen

@@ -57,10 +57,8 @@ class RulesScreen extends StatelessWidget {
             SizedBox(height: 20.0),
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                );
+                Navigator.pop(context);
+
               },
               icon: Icon(Icons.check, color: Colors.white),
               label: Text(
@@ -68,7 +66,7 @@ class RulesScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green[800], // Green color for the button
+                primary: Color.fromRGBO(152, 203, 81, 1), // Green color for the button
                 padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
                 textStyle: TextStyle(
                   fontSize: 18.0,

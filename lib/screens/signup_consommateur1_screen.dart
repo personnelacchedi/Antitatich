@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'signup_consommateur2_screen.dart'; // Import the next screen
-import 'rules_screen.dart'; // Import the RulesScreen
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'signup_consommateur2_screen.dart';
+import 'rules_screen.dart';
 
 class SignUpConsommateur1Screen extends StatefulWidget {
+  final String adresse;
+
+  SignUpConsommateur1Screen({required this.adresse});
+
   @override
   _SignUpConsommateur1ScreenState createState() => _SignUpConsommateur1ScreenState();
 }
@@ -13,14 +20,43 @@ class _SignUpConsommateur1ScreenState extends State<SignUpConsommateur1Screen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  Future<void> _submitStep2() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:3001/api/signup/step2'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'email': email,
+        'password': password,
+        'adresse': widget.adresse,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignUpConsommateur2Screen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit data: ${response.reasonPhrase}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(152, 203, 81, 1), // Light green background
-        centerTitle: true,
+        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -28,67 +64,92 @@ class _SignUpConsommateur1ScreenState extends State<SignUpConsommateur1Screen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Créer un compte',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green[900],
-                      fontFamily: 'Montserrat',
-                    ),
-                    textAlign: TextAlign.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Créer un compte',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontFamily: 'Montserrat',
                   ),
-                  SizedBox(height: 20),
-                  Image.asset(
-                    'assets/images/image7.png',
-                    height: 100.0, // Adjust the height as needed
-                    width: 100.0, // Adjust the width as needed
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Rejoignez-nous pour sauver la nourriture.',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
                   ),
-                  SizedBox(height: 20),
-                  _buildTextField(_emailController, 'Email', Icons.email, keyboardType: TextInputType.emailAddress),
-                  SizedBox(height: 10),
-                  _buildTextField(_passwordController, 'Mot de passe', Icons.lock, isPassword: true),
-                  SizedBox(height: 10),
-                  _buildTextField(_confirmPasswordController, 'Confirmation de mot de passe', Icons.lock_outline, isPassword: true),
-                  SizedBox(height: 20),
-                  GradientButton(
-                    text: 'Suivant',
-                    onPressed: _nextPage,
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RulesScreen()),
-                        );
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'En vous inscrivant, vous acceptez nos ',
-                          style: TextStyle(fontFamily: 'Montserrat', color: Colors.black),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'conditions et notre politique de confidentialité',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                                fontFamily: 'Montserrat',
-                              ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 20),
+                Image.asset(
+                  'assets/images/image6.png',
+                  height: 100.0,
+                  width: 100.0,
+                ),
+                SizedBox(height: 20),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildTextField(_emailController, 'Email', Icons.email),
+                      SizedBox(height: 10),
+                      _buildTextField(_passwordController, 'Password', Icons.lock, isPassword: true),
+                      SizedBox(height: 10),
+                      _buildTextField(_confirmPasswordController, 'Confirm Password', Icons.lock, isPassword: true),
+                      SizedBox(height: 20),
+                      GradientButton(
+                        text: 'Suivant',
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            if (_passwordController.text != _confirmPasswordController.text) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Passwords do not match')),
+                              );
+                            } else {
+                              _submitStep2();
+                            }
+                          }
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => RulesScreen()),
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'En vous inscrivant, vous acceptez nos ',
+                              style: TextStyle(fontFamily: 'Montserrat', color: Colors.black),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'conditions et notre politique de confidentialité',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -127,17 +188,7 @@ class _SignUpConsommateur1ScreenState extends State<SignUpConsommateur1Screen> {
       },
     );
   }
-
-  void _nextPage() {
-    if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignUpConsommateur2Screen()),
-      );
-    }
-  }
 }
-
 class GradientButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;

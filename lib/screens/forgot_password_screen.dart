@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'recuperation.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Réinitialiser le mot de passe'),
-        backgroundColor: Colors.green[200],
+        backgroundColor: Color.fromRGBO(152, 203, 81, 1),
         centerTitle: true,
         titleTextStyle: TextStyle(
           color: Colors.white,
@@ -86,13 +87,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.green[900]),
-        prefixIcon: Icon(icon, color: Colors.green[700]),
+        labelStyle: TextStyle(color: Color.fromRGBO(152, 203, 81, 1)),
+        prefixIcon: Icon(icon, color: Color.fromRGBO(152, 203, 81, 1)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green[700]!),
+          borderSide: BorderSide(color: Color.fromRGBO(152, 203, 81, 1)),
           borderRadius: BorderRadius.circular(12.0),
         ),
       ),
@@ -106,7 +107,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _resetPassword() {
+
     if (_formKey.currentState!.validate()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RecuperationScreen()),
+      );
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Réinitialisation du mot de passe en cours...')));
       // Perform the password reset logic here
     }
@@ -125,7 +131,7 @@ class GradientButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         gradient: LinearGradient(
-          colors: [Colors.green[700]!, Colors.green[400]!],
+          colors: [Color.fromRGBO(152, 203, 81, 1), Colors.green[400]!],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

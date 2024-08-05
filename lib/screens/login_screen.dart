@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'welcome_screen.dart';
 import 'forgot_password_screen.dart'; // Import the ForgotPasswordScreen
+import 'package:untitled/consommateur_screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -66,126 +69,128 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 20),
-                  Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Se connecter',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                        Text(
-                          'Content de te voir',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ],
-                    ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            child: Column(
+              children: [
+                Text(
+                  'Se connecter',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
                   ),
-                  SizedBox(height: 20),
-                  _buildTextField(
-                    _emailController,
-                    'Email',
-                    Icons.email,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: _validateEmail,
+                ),
+                Text(
+                  'Content de te voir',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
                   ),
-                  SizedBox(height: 10),
-                  _buildTextField(_passwordController, 'Mot de passe', Icons.lock, isPassword: true),
-                  SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
-                        );
-                      },
-                      child: Text(
-                        'Mot de passe oublié?',
-                        style: TextStyle(
-                          color: Colors.lightBlue,
-                          decoration: TextDecoration.underline,
-                          fontFamily: 'Montserrat',
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Checkbox(
-                        value: _saveLogin,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _saveLogin = value!;
-                          });
-                        },
+                      _buildTextField(
+                        _emailController,
+                        'Email',
+                        Icons.email,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: _validateEmail,
                       ),
-                      Text(
-                        'Se souvenir de moi',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  GradientButton(
-                    text: 'Se connecter',
-                    onPressed: _signIn,
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Vous n\'avez pas de compte? ',
-                          style: TextStyle(fontFamily: 'Montserrat'),
-                        ),
-                        GestureDetector(
+                      SizedBox(height: 10),
+                      _buildTextField(_passwordController, 'Mot de passe', Icons.lock, isPassword: true),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                              MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
                             );
                           },
                           child: Text(
-                            'Créer un compte',
+                            'Mot de passe oublié?',
                             style: TextStyle(
                               color: Colors.lightBlue,
-                              decoration: TextDecoration.underline,
                               fontFamily: 'Montserrat',
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _saveLogin,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _saveLogin = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Se souvenir de moi',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      GradientButton(
+                        text: 'Se connecter',
+                        onPressed: _signIn,
+                      ),
+                      SizedBox(height: 10),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Vous n\'avez pas de compte? ',
+                              style: TextStyle(fontFamily: 'Montserrat'),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                );
+                              },
+                              child: Text(
+                                'Créer un compte',
+                                style: TextStyle(
+                                  color: Colors.lightBlue,
+                                  decoration: TextDecoration.underline,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -229,10 +234,43 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _signIn() {
+  Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
       _saveLoginData();
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Connexion en cours...')));
+
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://10.0.2.2:3001/api/login'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'email': email,
+            'password': password,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          // If the server returns an OK response, parse the JSON.
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Connexion réussie!')));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur de connexion.')));
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur de connexion: $e')));
+      }
     }
   }
 }

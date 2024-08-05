@@ -18,7 +18,6 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  bool _filterByCuisine = false;
   double _minPrice = 0;
   double _maxPrice = 100;
   double _minDistance = 0;
@@ -46,21 +45,28 @@ class _FilterScreenState extends State<FilterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filtrer'),
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context, null);
           },
         ),
+        title: Text('Filtrer', style: TextStyle(color: Colors.black)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Price Range'),
+            Text(
+              'Price Range',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             RangeSlider(
+              activeColor: Color.fromRGBO(152, 203, 81, 1),
+              inactiveColor: Colors.green.shade100,
               min: 0,
               max: 100,
               divisions: 20,
@@ -76,9 +82,21 @@ class _FilterScreenState extends State<FilterScreen> {
                 '\$${_maxPrice.toStringAsFixed(0)}',
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                '\$${_minPrice.toStringAsFixed(0)} - \$${_maxPrice.toStringAsFixed(0)}',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
             SizedBox(height: 20),
-            Text('Distance Range'),
+            Text(
+              'Distance Range',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             RangeSlider(
+              activeColor: Color.fromRGBO(152, 203, 81, 1),
+              inactiveColor: Colors.green.shade100,
               min: 0,
               max: 50,
               divisions: 10,
@@ -94,10 +112,30 @@ class _FilterScreenState extends State<FilterScreen> {
                 '${_maxDistance.toStringAsFixed(0)} km',
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                '${_minDistance.toStringAsFixed(0)} km - ${_maxDistance.toStringAsFixed(0)} km',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _applyFilters,
-              child: Text('Apply Filters'),
+            Center(
+              child: ElevatedButton(
+                onPressed: _applyFilters,
+                child: Text(
+                  'Apply',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromRGBO(152, 203, 81, 1),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+              ),
             ),
           ],
         ),

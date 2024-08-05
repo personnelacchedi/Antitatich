@@ -42,7 +42,7 @@ class _SignUpConsommateur2ScreenState extends State<SignUpConsommateur2Screen> {
                 'Compte créé !',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Montserrat',
                 ),
@@ -54,8 +54,8 @@ class _SignUpConsommateur2ScreenState extends State<SignUpConsommateur2Screen> {
                 'Merci de nous aider à mieux vous recommander.',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: 'Montserrat',
+                  fontSize: 15,
+
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -166,10 +166,10 @@ class _SignUpConsommateur2ScreenState extends State<SignUpConsommateur2Screen> {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          primary: isSelected ? Color.fromRGBO(152, 203, 81, 1) : Colors.white,
+          primary: isSelected ? Color.fromRGBO(103, 138, 55, 1) : Color.fromRGBO(226, 240, 206, 1),
           onPrimary: Color.fromRGBO(152, 203, 81, 1),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(40),
             side: BorderSide(
               color: Color.fromRGBO(152, 203, 81, 1),
               width: 2,

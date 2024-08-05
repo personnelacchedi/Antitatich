@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SplashPage(
       title: '',
       imagePath: 'assets/images/image1.png',
-      bottomText: 'Bienvenue à AntiTatich',
+      bottomText: '',
       description: '',
     ),
     FeatureSplashPage(
@@ -75,19 +75,20 @@ class _SplashScreenState extends State<SplashScreen> {
             bottom: 60.0,
             left: 20.0,
             child: _currentPage > 0
-                ? ElevatedButton(
+                ? TextButton(
               onPressed: _previousPage,
-              style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(152, 203, 81, 1),
-                padding: EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 12.0),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                 textStyle: TextStyle(
                   fontFamily: 'Montserrat',
+
                 ),
               ),
               child: Text(
                 'Précédent',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Color.fromRGBO(79, 106, 42, 1),fontSize: 16,
+                ),
               ),
             )
                 : Container(),
@@ -189,9 +190,9 @@ class SplashPage extends StatelessWidget {
               Text(
                 bottomText,
                 style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(152, 203, 81, 1),
+                  fontSize: 23,
+                  fontWeight: FontWeight.w500,
+                  color: Color.fromRGBO(0, 0, 0, 1),
                   fontFamily: 'Montserrat',
                 ),
                 textAlign: TextAlign.center,

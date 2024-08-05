@@ -9,7 +9,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Votre panier'),
+        title: Text('Votre panier',style: TextStyle(fontFamily: 'Montserrat'),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -49,11 +49,14 @@ class CartScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.lightGreen,
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: Size(double.infinity, 60),
+
+
+
               ),
               child: Text(
                 'Passer à la caisse',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18,color: Colors.white),
               ),
             ),
           ],
@@ -106,7 +109,7 @@ class CartItemTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.remove_circle, color: Colors.red),
+            icon: Icon(Icons.remove_circle, color: Colors.red,size: 25,),
             onPressed: () {
               if (item.quantity > 1) {
                 cart.updateItemQuantity(item, item.quantity - 1);
@@ -117,10 +120,10 @@ class CartItemTile extends StatelessWidget {
           ),
           Text(
             '${item.quantity}',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 23),
           ),
           IconButton(
-            icon: Icon(Icons.add_circle, color: Colors.green),
+            icon: Icon(Icons.add_circle, color: Colors.green,size: 25,),
             onPressed: () {
               cart.updateItemQuantity(item, item.quantity + 1);
             },

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'notifications_screen.dart';
 import 'language_screen.dart';
+import 'details_de_compte_screen.dart';
+import 'historique_des_commandes_screen.dart';
+import 'package:untitled/screens/welcome_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Paramètres', style: TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.bold, color: Colors.black)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -18,9 +26,9 @@ class SettingsScreen extends StatelessWidget {
           Text(
             'Paramètres',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 19,
               fontWeight: FontWeight.bold,
-              color: Colors.green,
+              color: Color.fromRGBO(55,73,29,1),
               fontFamily: 'Montserrat',
             ),
           ),
@@ -28,22 +36,28 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.person_outline, color: Colors.green),
             title: Text('Détails du compte', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
-              // Navigate to account details
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailsDeCompteScreen()),
+              );
             },
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.credit_card, color: Colors.green),
+            leading: Icon(Icons.credit_card_outlined, color: Colors.green),
             title: Text('Carte de paiement', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
               // Navigate to payment card
             },
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.language, color: Colors.green),
+            leading: Icon(Icons.language_outlined, color: Colors.green),
             title: Text('Langue', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
               Navigator.push(
                 context,
@@ -55,14 +69,19 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.history, color: Colors.green),
             title: Text('Historique des commandes', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
-              // Navigate to order history
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistoriqueDesCommandesScreen()),
+              );
             },
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.notifications, color: Colors.green),
+            leading: Icon(Icons.notifications_outlined, color: Colors.green),
             title: Text('Notifications', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
               Navigator.push(
                 context,
@@ -83,8 +102,9 @@ class SettingsScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           ListTile(
-            leading: Icon(Icons.group_add, color: Colors.green),
+            leading: Icon(Icons.group_add_outlined, color: Colors.green),
             title: Text('Rejoindre Antitatich', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
               // Navigate to join Antitatich
             },
@@ -93,6 +113,7 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.help_outline, color: Colors.green),
             title: Text('Aide et assistance', style: TextStyle(fontFamily: 'Montserrat', color: Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
             onTap: () {
               // Navigate to help and support
             },
@@ -102,7 +123,10 @@ class SettingsScreen extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                // Handle logout
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,
@@ -113,7 +137,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               ),
-
               child: Text(
                 'Se déconnecter',
                 style: TextStyle(

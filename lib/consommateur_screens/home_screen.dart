@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:untitled/consommateur_screens/restaurant_screen.dart';
 import 'cart_screen.dart';
 import 'item_detail_screen.dart';
 import 'filter_screen.dart';
 import 'cart_model.dart';
+import 'map_screen.dart';
+import 'messagerie_screen.dart';
+import 'all_products_screen.dart';
+import 'item_card.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,9 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomeContent(),
-    Text('Restaurant Screen Content Goes Here'),
-    Text('Messagerie Screen Content Goes Here'),
-    Text('Map Screen Content Goes Here'),
+    RestaurantScreen(),
+    MessagerieScreen(),
+    MapScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -45,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final cartItemCount = context.watch<CartModel>().totalItems;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: (_selectedIndex == 0 || _selectedIndex == 1)
+          ? AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -53,7 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.shopping_cart_outlined, color: Colors.green, size: 30),
+                icon: Icon(Icons.shopping_cart_outlined,
+                    color: Color.fromRGBO(152, 203, 81, 1), size: 35),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -91,19 +98,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         title: Row(
           children: [
-            Icon(FontAwesomeIcons.locationDot, color: Colors.green),
+            Icon(
+              FontAwesomeIcons.locationDot,
+              color: Color.fromRGBO(152, 203, 81, 1),
+              size: 20,
+            ),
             SizedBox(width: 5),
             Text(
               'Rue 1002, Tunis',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 15,
               ),
             ),
           ],
         ),
-      ),
+      )
+          : null,
       body: _selectedIndex == 0
           ? HomeContent(
         minPrice: _minPrice,
@@ -113,28 +125,58 @@ class _HomeScreenState extends State<HomeScreen> {
       )
           : _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items:  <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Image.asset(
+              'assets/images/home.png',
+              width: 28,
+              height: 24,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store_mall_directory_outlined),
-            label: 'Restaurants',
+            icon: Image.asset(
+              'assets/images/commerce.png',
+              width: 28,
+              height: 24,
+            ),
+            label: 'commerce',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.message),
+            icon: Image.asset(
+              'assets/images/messagerie.png',
+              width: 28,
+              height: 24,
+            ),
             label: 'Messagerie',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
+            icon: Image.asset(
+              'assets/images/map.png',
+              width: 28,
+              height: 24,
+            ),
             label: 'Map',
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black54,
+        unselectedItemColor: Colors.white,
         backgroundColor: Color.fromRGBO(152, 203, 81, 1),
+        selectedLabelStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+        selectedIconTheme: IconThemeData(
+          size: 30,
+        ),
+        unselectedIconTheme: IconThemeData(
+          size: 24,
+        ),
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
@@ -142,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
   final double minPrice;
   final double maxPrice;
   final double minDistance;
@@ -156,79 +198,125 @@ class HomeContent extends StatelessWidget {
   });
 
   @override
+  _HomeContentState createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  String searchTerm = '';
+  String selectedFilter = 'All';
+
+  @override
   Widget build(BuildContext context) {
-    // Example items
-    List<ItemCard> items = [
+    // Example items for each category
+    List<ItemCard> allProductsItems = [
       ItemCard(
         imageUrl: 'assets/images/image9.png',
-        name: 'Pain ciabatta',
-        description: 'Description of Pain ciabatta',
-        oldPrice: 2.00,
-        newPrice: 1.50,
-        distance: '4 km',
-        rating: 4.7,
-        discount: '30%',
-        availablePieces: 22,
-        storeName: 'Yummy Food',
-        deliveryAvailable: false,
-      ),
-      ItemCard(
-        imageUrl: 'assets/images/image9.png',
-        name: 'Sandwich Poulet',
-        description: 'Description of Sandwich Poulet',
-        oldPrice: 6.00,
-        newPrice: 4.50,
-        distance: '4 km',
-        rating: 4.7,
-        discount: '30%',
-        availablePieces: 15,
-        storeName: 'Yummy Food',
+        name: 'Item 1',
+        oldPrice: 50,
+        newPrice: 45,
+        distance: '5 km',
+        rating: 4.5,
+        discount: '10%',
+        description: 'Description of Item 1',
+        availablePieces: 10,
+        storeName: 'Store 1',
         deliveryAvailable: true,
       ),
+      // Add more items as needed
     ];
 
-    // Filter items
-    items = items.where((item) {
+    List<ItemCard> fruitsAndVeggiesItems = [
+      ItemCard(
+        imageUrl: 'assets/images/image9.png',
+        name: 'Fruit 1',
+        oldPrice: 30,
+        newPrice: 25,
+        distance: '2 km',
+        rating: 4.8,
+        discount: '17%',
+        description: 'Description of Fruit 1',
+        availablePieces: 5,
+        storeName: 'Store 3',
+        deliveryAvailable: false,
+      ),
+      // Add more items as needed
+    ];
+
+    List<ItemCard> foodItems = [
+      ItemCard(
+        imageUrl: 'assets/images/image9.png',
+        name: 'Food 1',
+        oldPrice: 60,
+        newPrice: 55,
+        distance: '10 km',
+        rating: 4.0,
+        discount: '8%',
+        description: 'Description of Food 1',
+        availablePieces: 8,
+        storeName: 'Store 2',
+        deliveryAvailable: true,
+      ),
+      // Add more items as needed
+    ];
+
+    // Filter items based on search term, selected filter, and other filters
+    List<ItemCard> filteredItems = [];
+    if (selectedFilter == 'All') {
+      filteredItems = allProductsItems + fruitsAndVeggiesItems + foodItems;
+    } else if (selectedFilter == 'legumes et fruits') {
+      filteredItems = fruitsAndVeggiesItems;
+    } else if (selectedFilter == 'FastFood') {
+      filteredItems = foodItems;
+    }
+
+    filteredItems = filteredItems.where((item) {
       double itemPrice = item.newPrice;
       double itemDistance = double.parse(item.distance.split(' ')[0]);
-      return itemPrice >= minPrice &&
-          itemPrice <= maxPrice &&
-          itemDistance >= minDistance &&
-          itemDistance <= maxDistance;
+      bool matchesSearchTerm = item.name.toLowerCase().contains(searchTerm.toLowerCase());
+      return itemPrice >= widget.minPrice &&
+          itemPrice <= widget.maxPrice &&
+          itemDistance >= widget.minDistance &&
+          itemDistance <= widget.maxDistance &&
+          matchesSearchTerm;
     }).toList();
+
+    // Display only first four items
+    List<ItemCard> displayedItems = filteredItems.take(4).toList();
 
     return SingleChildScrollView(
       child: Column(
         children: [
+          // Search bar and filter buttons
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                // Search bar
                 TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchTerm = value;
+                    });
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Search restaurants, plats',
-                    prefixIcon: Icon(Icons.search, color: Colors.green),
+                    hintText: 'chercher des paniers',
+                    prefixIcon: Icon(Icons.search, color: Color.fromRGBO(152, 203, 81, 1)),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.sort, color: Colors.green),
+                      icon: Icon(Icons.filter_list, color: Color.fromRGBO(152, 203, 81, 1)),
                       onPressed: () async {
                         final filters = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => FilterScreen(
-                              initialMinPrice: minPrice,
-                              initialMaxPrice: maxPrice,
-                              initialMinDistance: minDistance,
-                              initialMaxDistance: maxDistance,
+                              initialMinPrice: widget.minPrice,
+                              initialMaxPrice: widget.maxPrice,
+                              initialMinDistance: widget.minDistance,
+                              initialMaxDistance: widget.maxDistance,
                             ),
                           ),
                         );
                         if (filters != null) {
-                          HomeContent(
-                            minPrice: filters['minPrice'],
-                            maxPrice: filters['maxPrice'],
-                            minDistance: filters['minDistance'],
-                            maxDistance: filters['maxDistance'],
-                          );
+                          (context.findAncestorStateOfType<_HomeScreenState>())?._applyFilters(filters);
                         }
                       },
                     ),
@@ -242,226 +330,158 @@ class HomeContent extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10),
+                // Filter buttons
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      FilterButton(icon: 'assets/images/image9.png', label: 'Tous'),
-                      FilterButton(icon: 'assets/images/image9.png', label: 'Boissons'),
-                      FilterButton(icon: 'assets/images/image9.png', label: 'Laitière'),
-                      FilterButton(icon: 'assets/images/image9.png', label: 'Boulangerie'),
-                      FilterButton(icon: 'assets/images/image9.png', label: 'Voir plus'),
+                      FilterButton(icon: 'assets/images/pizza.png', label: 'FastFood', onSelected: _onFilterSelected),
+                      FilterButton(icon: 'assets/images/meat.png', label: 'boucherie', onSelected: _onFilterSelected),
+                      FilterButton(icon: 'assets/images/fish.png', label: 'poison', onSelected: _onFilterSelected),
+                      FilterButton(icon: 'assets/images/bread.png', label: 'Boulangerie', onSelected: _onFilterSelected),
+                      FilterButton(icon: 'assets/images/basket.png', label: 'legumes et fruits', onSelected: _onFilterSelected),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          Column(children: items),
+          // Title and 'Voir tous' button for all products
+          _buildSection(
+            title: 'Tous les produits',
+            items: displayedItems,
+            onVoirTousPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AllProductsScreen(items: filteredItems)),
+              );
+            },
+          ),
         ],
       ),
     );
   }
+
+  void _onFilterSelected(String filter) {
+    setState(() {
+      selectedFilter = filter == selectedFilter ? 'All' : filter;
+    });
+  }
+
+  Widget _buildSection({required String title, required List<ItemCard> items, required VoidCallback onVoirTousPressed}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section title with "Voir tous" button
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: onVoirTousPressed,
+                child: Text(
+                  'Voir tous',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 15,
+                    color: Colors.lightBlue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Item cards
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: items.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              childAspectRatio: 0.95,
+            ),
+            itemBuilder: (context, index) {
+              return items[index];
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-class FilterButton extends StatelessWidget {
+
+
+class FilterButton extends StatefulWidget {
   final String icon;
   final String label;
+  final ValueChanged<String> onSelected;
 
-  FilterButton({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(icon),
-            radius: 25,
-          ),
-          SizedBox(height: 5),
-          Text(label, style: TextStyle(fontSize: 12)),
-        ],
-      ),
-    );
-  }
-}
-
-class ItemCard extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String description;
-  final double oldPrice;
-  final double newPrice;
-  final String distance;
-  final double rating;
-  final String discount;
-  final int availablePieces;
-  final String storeName;
-  final bool deliveryAvailable;
-
-  ItemCard({
-    required this.imageUrl,
-    required this.name,
-    required this.description,
-    required this.oldPrice,
-    required this.newPrice,
-    required this.distance,
-    required this.rating,
-    required this.discount,
-    required this.availablePieces,
-    required this.storeName,
-    required this.deliveryAvailable,
+  FilterButton({
+    required this.icon,
+    required this.label,
+    required this.onSelected,
   });
 
-  void _showItemDetails(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ItemDetailScreen(
-          imageUrl: imageUrl,
-          name: name,
-          description: description,
-          oldPrice: oldPrice,
-          newPrice: newPrice,
-          distance: distance,
-          rating: rating,
-          discount: discount,
-          availablePieces: availablePieces,
-          storeName: storeName,
-          deliveryAvailable: deliveryAvailable,
-        ),
-      ),
-    );
+  @override
+  _FilterButtonState createState() => _FilterButtonState();
+}
+
+class _FilterButtonState extends State<FilterButton> {
+  bool isSelected = false;
+
+  void toggleSelection() {
+    setState(() {
+      isSelected = !isSelected;
+    });
+    widget.onSelected(widget.label);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showItemDetails(context),
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0),
-                    child: Image.asset(
-                      imageUrl,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        discount,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    left: 10,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        '$availablePieces Pièces',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
+      onTap: toggleSelection,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Column(
+          children: [
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? Color.fromRGBO(218, 236, 192, 1) : Colors.transparent,
+                border: Border.all(color: Color.fromRGBO(152, 203, 81, 1), width: 2),
               ),
-              SizedBox(height: 10),
-              Text(
-                name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: ClipOval(
+                child: Image.asset(
+                  widget.icon,
+                  width: 25,
+                  height: 25,
+                ),
               ),
-              Row(
-                children: [
-                  Text(
-                    '\$$oldPrice',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 18,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    '\$$newPrice',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.star, color: Colors.yellow, size: 24),
-                  Text(
-                    '$rating',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(Icons.location_pin, color: Colors.green),
-                  SizedBox(width: 5),
-                  Text(
-                    distance,
-                    style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(Icons.store, color: Colors.orange),
-                  SizedBox(width: 5),
-                  Text(
-                    'Chez $storeName',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(Icons.delivery_dining, color: deliveryAvailable ? Colors.green : Colors.red),
-                  SizedBox(width: 5),
-                  Text(
-                    deliveryAvailable ? 'Livraison disponible' : 'Livraison non disponible',
-                    style: TextStyle(fontSize: 16, color: deliveryAvailable ? Colors.green : Colors.red),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 5),
+            Text(widget.label, style: TextStyle(fontSize: 14)),
+          ],
         ),
       ),
     );
   }
 }
+
+
+
+
